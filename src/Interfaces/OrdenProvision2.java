@@ -3,6 +3,8 @@ package Interfaces;
 
 import DAO.Conexion;
 import DAO.DAOSucursalesImplementacion;
+import DAO.OrdenDAO;
+import com.mysql.cj.protocol.x.FetchDoneMoreResultsFactory;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.lang.System.Logger;
@@ -304,21 +306,9 @@ public class OrdenProvision2 extends javax.swing.JFrame {
         if(txtOrden.getText().equals("")) {
             JOptionPane.showMessageDialog(null,"Complete el campo:\nidOrden\nY/O veriffique que existe la orden");
         }else{
-            try {
-                Connection conectar = conexion.conectar();
-                PreparedStatement eliminar = conectar.prepareStatement("delete from ordenprovision where idorden = ? ");
-                String idString =txtOrden.getText();
-                int id=Integer.parseInt(idString);
-                eliminar.setInt(1,id);
-                eliminar.executeUpdate();
-
-                JOptionPane.showMessageDialog(null,"Eliminado con exito");
-                conexion.cerrarConexion();
-            } catch (SQLException e) {
-                System.out.println("error bd" + e);
-            } catch (ClassNotFoundException ex) {
-                java.util.logging.Logger.getLogger(OrdenProvision2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            } }
+            OrdenDAO orden = new OrdenDAO();
+            orden.eliminarOrden(Integer.parseInt(txtOrden.getText()));
+        }
     }//GEN-LAST:event_BotonRegistrarOrden1ActionPerformed
 
     private void botonEliminarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarProductosActionPerformed
@@ -427,7 +417,8 @@ public class OrdenProvision2 extends javax.swing.JFrame {
             tablaOrdenes.setModel(modelo);
 
             Connection conex = conexion.conectar();
-            PreparedStatement seleccion = conex.prepareStatement("select * from ordenprovision");
+            PreparedStatement seleccion = conex.prepareStatement("select * from ordenprovision where estado = ?");
+            seleccion.setString(1, "PENDIENTE");
             ResultSet consulta = seleccion.executeQuery();
 
             tablaOrdenes=new JTable(modelo);

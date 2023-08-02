@@ -88,15 +88,12 @@ public class DAOSucursalesImplementacion implements DAO{
             ResultSet consulta =buscar.executeQuery();
            
             while(consulta.next()){
-                 System.out.println(consulta.getString("nombre"));
-                 System.out.println("hoal");
                 sucursal.setId(Integer.parseInt(consulta.getString("id")));
                 sucursal.setNombre(consulta.getString("nombre"));
-                //sucursal.setHoraApertura(consulta.getTime("horaApertura"));
-                //sucursal.setHoraCierre(consulta.getTime("horaCierre"));
-                //sucursal.setEstado(consulta.getString("estado"));
+                sucursal.setHoraApertura(consulta.getTime("horaApertura"));
+                sucursal.setHoraCierre(consulta.getTime("horaCierre"));
+                sucursal.setEstado(consulta.getString("estado"));
             }
-            JOptionPane.showMessageDialog(null,"LLEGUE");
             conexion.cerrarConexion();
         } catch (SQLException e) {
             System.out.println("error bd" + e);
